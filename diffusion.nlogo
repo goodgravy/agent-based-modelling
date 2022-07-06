@@ -31,14 +31,15 @@ end
 ;; per turtle
 ;; adopt if influenced this tick
 to adopt-if-influenced
-  if (random 100 < broadcast-influence * 100) or
-     (random 100 < social-influence * fraction-adopters) [
+  if (random-float 1.0 < broadcast-influence) or
+     (random-float 1.0 < social-influence * fraction-adopters) [
     adopt
   ]
 end
 
 
 ;; per turtle
+;; this turtle has decided to adopt: update it to reflect the choice
 to adopt
   set has-adopted? true
   set color green
