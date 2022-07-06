@@ -31,18 +31,19 @@ end
 ;; per turtle
 ;; adopt if influenced this tick
 to adopt-if-influenced
-  if (random-float 1.0 < broadcast-influence) or
-     (random-float 1.0 < social-influence * fraction-adopters) [
-    adopt
-  ]
+  let random-value random-float 1.0
+  (ifelse
+    random-value < broadcast-influence [ adopt blue ]
+    random-value < social-influence * fraction-adopters [ adopt red ]
+  )
 end
 
 
 ;; per turtle
 ;; this turtle has decided to adopt: update it to reflect the choice
-to adopt
+to adopt [ colour ]
   set has-adopted? true
-  set color green
+  set color colour
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
