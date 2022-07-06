@@ -86,7 +86,7 @@ num-agents
 num-agents
 0
 100
-50.0
+100.0
 1
 1
 NIL
@@ -172,6 +172,24 @@ NIL
 NIL
 NIL
 1
+
+PLOT
+4
+311
+204
+461
+adoption
+NIL
+percentage adoption
+0.0
+10.0
+0.0
+100.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot fraction-adopters * 100"
 
 @#$#@#$#@
 ## WHAT IS IT?
