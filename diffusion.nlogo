@@ -23,13 +23,14 @@ end
 to go
   set fraction-adopters (count turtles with [ has-adopted? ]) / num-agents
 
-  ask turtles [ adopt-if-influenced ]
+  ask turtles with [ not has-adopted? ] [ adopt-if-influenced ]
 
   tick
 end
 
 ;; per turtle
 ;; adopt if influenced this tick
+;; we set different colours based on whether the broadcast or social influence was at play
 to adopt-if-influenced
   let random-value random-float 1.0
   (ifelse
