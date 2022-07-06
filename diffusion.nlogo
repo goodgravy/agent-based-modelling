@@ -93,10 +93,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-17
-97
-83
-130
+16
+96
+71
+129
 NIL
 setup
 NIL
@@ -110,10 +110,10 @@ NIL
 1
 
 BUTTON
-124
-98
+132
+96
 187
-131
+129
 NIL
 go
 T
@@ -127,40 +127,40 @@ NIL
 1
 
 SLIDER
-50
-235
-87
-391
+16
+146
+53
+302
 broadcast-influence
 broadcast-influence
 0
 1
-0.09
+0.05
 0.01
 1
 NIL
 VERTICAL
 
 SLIDER
-103
-235
-140
-385
+69
+146
+106
+301
 social-influence
 social-influence
 0
 1
-0.2
+0.25
 0.01
 1
 NIL
 VERTICAL
 
 BUTTON
-55
-152
-118
-185
+74
+96
+129
+129
 step
 go
 NIL
