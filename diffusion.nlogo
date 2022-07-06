@@ -17,6 +17,12 @@ to setup
     set shape "face happy"
   ]
 
+  ;; create random undirected links
+  ask turtles [ create-links-with n-of neighbours other turtles ]
+
+  ;; update positions to make network easier to interpret
+  repeat 30 [ layout-spring turtles links 0.2 5 1 ]
+
   reset-ticks
 end
 
@@ -36,9 +42,14 @@ end
 ;; we set different colours based on whether the broadcast or social influence was at play
 to adopt-if-influenced
   let random-value random-float 1.0
+
+  let neighbour-count    count link-neighbors
+  let neighbour-adopters count link-neighbors with [ has-adopted? ]
+  let fraction-neighbour-adopters neighbour-adopters / neighbour-count
+
   (ifelse
     random-value < broadcast-influence [ adopt blue ]
-    random-value < social-influence * fraction-adopters [ adopt red ]
+    random-value < social-influence * fraction-neighbour-adopters [ adopt red ]
   )
 end
 
@@ -190,6 +201,21 @@ false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "plot fraction-adopters * 100"
+
+SLIDER
+122
+147
+159
+301
+neighbours
+neighbours
+0
+10
+1.0
+1
+1
+NIL
+VERTICAL
 
 @#$#@#$#@
 ## WHAT IS IT?
