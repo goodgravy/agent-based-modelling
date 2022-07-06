@@ -86,7 +86,7 @@ num-agents
 num-agents
 0
 100
-100.0
+69.0
 1
 1
 NIL
@@ -135,7 +135,7 @@ broadcast-influence
 broadcast-influence
 0
 1
-0.05
+0.01
 0.01
 1
 NIL
@@ -150,7 +150,7 @@ social-influence
 social-influence
 0
 1
-0.25
+0.5
 0.01
 1
 NIL
@@ -174,13 +174,13 @@ NIL
 1
 
 PLOT
-4
-311
-204
-461
+6
+482
+206
+632
 adoption
-NIL
-percentage adoption
+time
+adoption %
 0.0
 10.0
 0.0
