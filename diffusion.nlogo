@@ -23,6 +23,9 @@ end
 to go
   set fraction-adopters (count turtles with [ has-adopted? ]) / num-agents
 
+  ;; stop if everyone has adopted
+  if fraction-adopters = 1 [ stop ]
+
   ask turtles with [ not has-adopted? ] [ adopt-if-influenced ]
 
   tick
