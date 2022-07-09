@@ -8,15 +8,14 @@ to setup
   ;; create agents, and links according to network type choice
   (ifelse
     network-type = "preferential attachment" [
-      let min-degree floor (density / 20) + 1
+      let min-degree max list 1 (density * 10)
       nw:generate-preferential-attachment turtles links num-agents min-degree [ reset-turtle ]
     ]
     network-type = "random" [
-      let connection-prob density / 100
-      nw:generate-random turtles links num-agents connection-prob [ reset-turtle ]
+      nw:generate-random turtles links num-agents density[ reset-turtle ]
     ]
     network-type = "watts strogatz" [
-      let neighbourhood-size floor density / 20
+      let neighbourhood-size floor density * 10
       nw:generate-watts-strogatz turtles links num-agents neighbourhood-size .1 [ reset-turtle ]
     ]
   )
@@ -271,9 +270,9 @@ SLIDER
 density
 density
 0
-100
-44.0
 1
+1.0
+.05
 1
 NIL
 HORIZONTAL
