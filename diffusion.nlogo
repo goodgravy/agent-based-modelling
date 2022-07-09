@@ -1,28 +1,36 @@
-globals [ fraction-adopters ]
+extensions [ nw ]
+globals [ fraction-adopters mean-neighbour-count ]
 turtles-own [ has-adopted? ]
 
 to setup
   clear-all
 
-  ;; create agents
-  create-turtles num-agents [
-    ;; initialise variables
-    set has-adopted? false
+  ;; create agents, and links according to network type choice
+  (ifelse
+    network-type = "preferential attachment" [
+      let min-degree floor (density / 20) + 1
+      nw:generate-preferential-attachment turtles links num-agents min-degree [ reset-turtle ]
+    ]
+    network-type = "random" [
+      let connection-prob density / 100
+      nw:generate-random turtles links num-agents connection-prob [ reset-turtle ]
+    ]
+    network-type = "watts strogatz" [
+      let neighbourhood-size floor density / 20
+      nw:generate-watts-strogatz turtles links num-agents neighbourhood-size .1 [ reset-turtle ]
+    ]
+  )
 
-    ;; randomise location
-    setxy random-pxcor random-pycor
-
-    ;; consistent appearance
-    set color white
-    set shape "face happy"
-  ]
-
-  ;; create random undirected links
-  ask turtles [ create-links-with n-of neighbours other turtles ]
+  set mean-neighbour-count mean [ count link-neighbors ] of turtles
 
   ;; update positions to make network easier to interpret
   repeat 30 [ layout-spring turtles links 0.2 5 1 ]
 
+  reset-ticks
+end
+
+to reset
+  ask turtles [ reset-turtle ]
   reset-ticks
 end
 
@@ -60,12 +68,23 @@ to adopt [ colour ]
   set has-adopted? true
   set color colour
 end
+
+;; per turtle
+;; initialises the turtle
+to reset-turtle
+  ;; initialise variables
+  set has-adopted? false
+
+  ;; consistent appearance
+  set color white
+  set shape "face happy"
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
-210
-10
-647
-448
+356
+16
+793
+454
 -1
 -1
 13.0
@@ -75,8 +94,8 @@ GRAPHICS-WINDOW
 1
 1
 0
-1
-1
+0
+0
 1
 -16
 16
@@ -91,7 +110,7 @@ ticks
 SLIDER
 15
 46
-187
+258
 79
 num-agents
 num-agents
@@ -104,10 +123,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-16
-96
-71
-129
+17
+256
+72
+289
 NIL
 setup
 NIL
@@ -121,10 +140,10 @@ NIL
 1
 
 BUTTON
-132
-96
-187
-129
+205
+256
+260
+289
 NIL
 go
 T
@@ -138,10 +157,10 @@ NIL
 1
 
 SLIDER
-16
-146
-53
-302
+17
+306
+50
+462
 broadcast-influence
 broadcast-influence
 0
@@ -153,10 +172,10 @@ NIL
 VERTICAL
 
 SLIDER
-69
-146
-106
-301
+70
+306
+103
+461
 social-influence
 social-influence
 0
@@ -168,10 +187,10 @@ NIL
 VERTICAL
 
 BUTTON
-74
-96
-129
-129
+145
+256
+200
+289
 step
 go
 NIL
@@ -203,12 +222,12 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot fraction-adopters * 100"
 
 SLIDER
-122
-147
-159
-301
-neighbours
-neighbours
+123
+307
+156
+461
+num-neighbours
+num-neighbours
 0
 10
 1.0
@@ -216,6 +235,59 @@ neighbours
 1
 NIL
 VERTICAL
+
+BUTTON
+77
+256
+140
+289
+NIL
+reset
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+CHOOSER
+16
+90
+257
+135
+network-type
+network-type
+"preferential attachment" "random" "watts strogatz"
+0
+
+SLIDER
+17
+146
+257
+179
+density
+density
+0
+100
+44.0
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+18
+195
+179
+240
+NIL
+mean-neighbour-count
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
