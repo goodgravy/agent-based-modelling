@@ -55,13 +55,26 @@ end
 to adopt-if-influenced
   let random-value random-float 1.0
 
-  let neighbour-count    count link-neighbors
-  let neighbour-adopters count link-neighbors with [ has-adopted? ]
-  let fraction-neighbour-adopters neighbour-adopters / neighbour-count
+  let neighbour-normies          link-neighbors with [ breed = normies ]
+  let neighbour-normies-count    count neighbour-normies
+  let neighbour-normies-adopters count neighbour-normies with [ has-adopted? ]
+  let fraction-neighbour-normies-adopters ifelse-value
+  neighbour-normies-count > 0 [neighbour-normies-adopters / neighbour-normies-count]
+  [ 0 ]
+
+  let neighbour-influentials          link-neighbors with [ breed = influentials ]
+  let neighbour-influentials-count    count neighbour-influentials
+  let neighbour-influentials-adopters count neighbour-influentials with [ has-adopted? ]
+  let fraction-neighbour-influentials-adopters ifelse-value
+  neighbour-influentials-count > 0 [ neighbour-influentials-adopters / neighbour-influentials-count ]
+  [ 0 ]
 
   (ifelse
     random-value < broadcast-influence [ adopt blue ]
-    random-value < social-influence * fraction-neighbour-adopters [ adopt red ]
+    (random-value < social-influence * fraction-neighbour-normies-adopters or
+      random-value < social-influence * fraction-neighbour-influentials-adopters * influential-weight) [
+      adopt red
+    ]
   )
 end
 
@@ -235,7 +248,7 @@ true
 false
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plot fraction-adopters * 100"
+"default" 1.0 0 -16777216 true "" "plot fraction-normies-adopters * 100"
 
 SLIDER
 123
@@ -312,13 +325,31 @@ SLIDER
 461
 influential-weight
 influential-weight
-0
-100
-50.0
 1
+5
+3.0
+0.2
 1
 NIL
 VERTICAL
+
+PLOT
+257
+485
+457
+635
+influentials adopters
+adoption %
+NIL
+0.0
+10.0
+0.0
+100.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot fraction-influentials-adopters * 100"
 
 @#$#@#$#@
 ## WHAT IS IT?
