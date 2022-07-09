@@ -1,6 +1,9 @@
 extensions [ nw ]
-globals [ fraction-adopters mean-neighbour-count ]
+globals [ fraction-adopters fraction-normies-adopters fraction-influentials-adopters mean-neighbour-count ]
 turtles-own [ has-adopted? ]
+
+breed [influentials influential]
+breed [normies normy]
 
 to setup
   clear-all
@@ -9,14 +12,14 @@ to setup
   (ifelse
     network-type = "preferential attachment" [
       let min-degree max list 1 (density * 10)
-      nw:generate-preferential-attachment turtles links num-agents min-degree [ reset-turtle ]
+      nw:generate-preferential-attachment turtles links num-agents min-degree [ initialise-turtle ]
     ]
     network-type = "random" [
-      nw:generate-random turtles links num-agents density[ reset-turtle ]
+      nw:generate-random turtles links num-agents density[ initialise-turtle ]
     ]
     network-type = "watts strogatz" [
       let neighbourhood-size floor density * 10
-      nw:generate-watts-strogatz turtles links num-agents neighbourhood-size .1 [ reset-turtle ]
+      nw:generate-watts-strogatz turtles links num-agents neighbourhood-size .1 [ initialise-turtle ]
     ]
   )
 
@@ -35,6 +38,8 @@ end
 
 to go
   set fraction-adopters (count turtles with [ has-adopted? ]) / num-agents
+  set fraction-normies-adopters (count normies with [ has-adopted? ]) / count normies
+  set fraction-influentials-adopters (count influentials with [ has-adopted? ]) / count influentials
 
   ;; stop if everyone has adopted
   if fraction-adopters = 1 [ stop ]
@@ -69,14 +74,26 @@ to adopt [ colour ]
 end
 
 ;; per turtle
-;; initialises the turtle
+;; sets up the turtle from scratch
+to initialise-turtle
+  ifelse random 10 > 1 [ set breed normies ] [ set breed influentials ]
+
+  (ifelse
+    breed = influentials [ set shape "star" ]
+    [ set shape "sheep" ]
+  )
+
+  reset-turtle
+end
+
+;; per turtle
+;; resets enough about the turtle to allow for a re-run of an equivalent context – and no more
 to reset-turtle
   ;; initialise variables
   set has-adopted? false
 
   ;; consistent appearance
   set color white
-  set shape "face happy"
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -207,7 +224,7 @@ PLOT
 482
 206
 632
-adoption
+normies adoption
 time
 adoption %
 0.0
@@ -271,7 +288,7 @@ density
 density
 0
 1
-1.0
+0.25
 .05
 1
 NIL
@@ -287,6 +304,21 @@ mean-neighbour-count
 17
 1
 11
+
+SLIDER
+175
+307
+212
+461
+influential-weight
+influential-weight
+0
+100
+50.0
+1
+1
+NIL
+VERTICAL
 
 @#$#@#$#@
 ## WHAT IS IT?
