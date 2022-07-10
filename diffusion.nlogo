@@ -8,25 +8,33 @@ breed [normies normy]
 to setup
   clear-all
 
+  ;; shapes for breeds
+  set-default-shape influentials "star"
+  set-default-shape normies "sheep"
+
   ;; create agents, and links according to network type choice
   (ifelse
     network-type = "preferential attachment" [
       let min-degree max list 1 (density * 10)
-      nw:generate-preferential-attachment turtles links num-agents min-degree [ initialise-turtle ]
+      nw:generate-preferential-attachment turtles links num-agents min-degree [ reset-turtle ]
     ]
     network-type = "random" [
-      nw:generate-random turtles links num-agents density[ initialise-turtle ]
+      nw:generate-random turtles links num-agents density[ reset-turtle ]
     ]
     network-type = "watts strogatz" [
       let neighbourhood-size floor density * 10
-      nw:generate-watts-strogatz turtles links num-agents neighbourhood-size .1 [ initialise-turtle ]
+      nw:generate-watts-strogatz turtles links num-agents neighbourhood-size .1 [ reset-turtle ]
     ]
   )
+
+  ;; set some of the turtles to be influential
+  ask n-of (frac-influential * num-agents) turtles [ set breed influentials ]
+  ask turtles with [ breed != influentials ] [ set breed normies ]
 
   set mean-neighbour-count mean [ count link-neighbors ] of turtles
 
   ;; update positions to make network easier to interpret
-  repeat 30 [ layout-spring turtles links 0.2 5 1 ]
+  repeat 30 [ layout-spring turtles links 0.2 5 1.3 ]
 
   reset-ticks
 end
@@ -87,19 +95,6 @@ to adopt [ colour ]
 end
 
 ;; per turtle
-;; sets up the turtle from scratch
-to initialise-turtle
-  ifelse random 10 > 1 [ set breed normies ] [ set breed influentials ]
-
-  (ifelse
-    breed = influentials [ set shape "star" ]
-    [ set shape "sheep" ]
-  )
-
-  reset-turtle
-end
-
-;; per turtle
 ;; resets enough about the turtle to allow for a re-run of an equivalent context – and no more
 to reset-turtle
   ;; initialise variables
@@ -153,9 +148,9 @@ HORIZONTAL
 
 BUTTON
 17
-256
+325
 72
-289
+358
 NIL
 setup
 NIL
@@ -170,9 +165,9 @@ NIL
 
 BUTTON
 205
-256
+325
 260
-289
+358
 NIL
 go
 T
@@ -187,9 +182,9 @@ NIL
 
 SLIDER
 17
-306
+375
 50
-462
+531
 broadcast-influence
 broadcast-influence
 0
@@ -202,9 +197,9 @@ VERTICAL
 
 SLIDER
 70
-306
+375
 103
-461
+530
 social-influence
 social-influence
 0
@@ -217,9 +212,9 @@ VERTICAL
 
 BUTTON
 145
-256
+325
 200
-289
+358
 step
 go
 NIL
@@ -234,9 +229,9 @@ NIL
 
 PLOT
 6
-482
+551
 206
-632
+701
 normies adoption
 time
 adoption %
@@ -252,9 +247,9 @@ PENS
 
 BUTTON
 77
-256
+325
 140
-289
+358
 NIL
 reset
 NIL
@@ -275,7 +270,7 @@ CHOOSER
 network-type
 network-type
 "preferential attachment" "random" "watts strogatz"
-1
+0
 
 SLIDER
 17
@@ -294,9 +289,9 @@ HORIZONTAL
 
 MONITOR
 18
-195
+264
 179
-240
+309
 NIL
 mean-neighbour-count
 17
@@ -305,9 +300,9 @@ mean-neighbour-count
 
 SLIDER
 121
-307
+376
 158
-461
+530
 influential-weight
 influential-weight
 1
@@ -320,9 +315,9 @@ VERTICAL
 
 PLOT
 257
-485
+554
 457
-635
+704
 influentials adopters
 adoption %
 NIL
@@ -335,6 +330,21 @@ false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "plot fraction-influentials-adopters * 100"
+
+SLIDER
+17
+192
+257
+225
+frac-influential
+frac-influential
+0
+1
+0.15
+0.05
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
