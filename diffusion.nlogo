@@ -145,7 +145,7 @@ num-agents
 num-agents
 0
 100
-69.0
+100.0
 1
 1
 NIL
@@ -250,21 +250,6 @@ false
 PENS
 "default" 1.0 0 -16777216 true "" "plot fraction-normies-adopters * 100"
 
-SLIDER
-123
-307
-156
-461
-num-neighbours
-num-neighbours
-0
-10
-1.0
-1
-1
-NIL
-VERTICAL
-
 BUTTON
 77
 256
@@ -290,7 +275,7 @@ CHOOSER
 network-type
 network-type
 "preferential attachment" "random" "watts strogatz"
-0
+1
 
 SLIDER
 17
@@ -301,7 +286,7 @@ density
 density
 0
 1
-0.25
+0.15
 .05
 1
 NIL
@@ -319,15 +304,15 @@ mean-neighbour-count
 11
 
 SLIDER
-175
+121
 307
-212
+158
 461
 influential-weight
 influential-weight
 1
 5
-3.0
+1.0
 0.2
 1
 NIL
