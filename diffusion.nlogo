@@ -63,27 +63,41 @@ end
 to adopt-if-influenced
   let random-value random-float 1.0
 
-  let neighbour-normies          link-neighbors with [ breed = normies ]
-  let neighbour-normies-count    count neighbour-normies
-  let neighbour-normies-adopters count neighbour-normies with [ has-adopted? ]
-  let fraction-neighbour-normies-adopters ifelse-value
-  neighbour-normies-count > 0 [neighbour-normies-adopters / neighbour-normies-count]
+  let normies-count    count normies-i-notice
+  let normies-adopters count normies-i-notice with [ has-adopted? ]
+  let frac-normies-adopters ifelse-value
+  normies-count > 0 [normies-adopters / normies-count]
   [ 0 ]
 
-  let neighbour-influentials          link-neighbors with [ breed = influentials ]
-  let neighbour-influentials-count    count neighbour-influentials
-  let neighbour-influentials-adopters count neighbour-influentials with [ has-adopted? ]
-  let fraction-neighbour-influentials-adopters ifelse-value
-  neighbour-influentials-count > 0 [ neighbour-influentials-adopters / neighbour-influentials-count ]
+  let influentials-count    count influentials-i-notice
+  let influentials-adopters count influentials-i-notice with [ has-adopted? ]
+  let frac-influentials-adopters ifelse-value
+  influentials-count > 0 [ influentials-adopters / influentials-count ]
   [ 0 ]
 
   (ifelse
     random-value < broadcast-influence [ adopt blue ]
-    (random-value < social-influence * fraction-neighbour-normies-adopters or
-      random-value < social-influence * fraction-neighbour-influentials-adopters * influential-weight) [
+    (random-value < social-influence * frac-normies-adopters or
+      random-value < social-influence * frac-influentials-adopters * influential-weight) [
       adopt red
     ]
   )
+end
+
+;; per turtle
+;; reports the normy neighbours which I pay attention to
+;; if I'm influential, this will be empty
+to-report normies-i-notice
+  report (ifelse-value
+    breed = influentials [ no-turtles ]
+    breed = normies [ link-neighbors with [ breed = normies ] ]
+  )
+end
+
+;; per turtle
+;; reports my influential neighbours
+to-report influentials-i-notice
+  report link-neighbors with [ breed = influentials ]
 end
 
 
@@ -307,7 +321,7 @@ influential-weight
 influential-weight
 1
 5
-1.0
+5.0
 0.2
 1
 NIL
