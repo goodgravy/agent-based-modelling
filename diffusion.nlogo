@@ -63,24 +63,19 @@ end
 to adopt-if-influenced
   let random-value random-float 1.0
 
+  let frac-normies-adopters 0
   let normies-count    count normies-i-notice
   let normies-adopters count normies-i-notice with [ has-adopted? ]
-  let frac-normies-adopters ifelse-value
-  normies-count > 0 [normies-adopters / normies-count]
-  [ 0 ]
+  if normies-count > 0 [ set frac-normies-adopters normies-adopters / normies-count ]
 
+  let frac-influentials-adopters 0
   let influentials-count    count influentials-i-notice
   let influentials-adopters count influentials-i-notice with [ has-adopted? ]
-  let frac-influentials-adopters ifelse-value
-  influentials-count > 0 [ influentials-adopters / influentials-count ]
-  [ 0 ]
+  if influentials-count > 0 [ set frac-influentials-adopters influentials-adopters / influentials-count ]
 
   (ifelse
     random-value < broadcast-influence [ adopt blue ]
-    (random-value < social-influence * frac-normies-adopters or
-      random-value < social-influence * frac-influentials-adopters * influential-weight) [
-      adopt red
-    ]
+    random-value < social-influence * (frac-normies-adopters + frac-influentials-adopters * influential-weight) [ adopt red ]
   )
 end
 
